@@ -52,6 +52,7 @@ function shouldStopSession(afterLosses, maxMatches, records) {
 function inSession(setAppState, afterLosses, maxMatches, records, setRecords) {
     return (
         <div>
+            <div>You've finished {records.length} matches</div>
             <button onClick={e => {
                 e.preventDefault()
                 const newRecords = [...records, true]
