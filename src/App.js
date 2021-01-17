@@ -105,7 +105,8 @@ function App() {
                 {content}
             </section>
             <footer>
-                <p>overwatch.fail is not associated with Blizzard, etc, etc</p>
+                <p>Overwatch is a trademark of Blizzard Entertainment, Inc.</p>
+                <p>This website is not affiliation with or endorsed by Blizzard Entertainment, Inc.</p>
             </footer>
         </div>
     );
