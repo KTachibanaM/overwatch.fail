@@ -75,7 +75,7 @@ function inSession(setAppState, afterLosses, maxMatches, records, setRecords) {
 function afterSession() {
     return (
         <div>
-            <p>You should stop playing Overwatch now.</p>
+            <p>You should stop playing Overwatch now</p>
         </div>
     )
 }
