@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 
+const AfterLossesKey = 'AFTER_LOSSES'
+const MaxMatchesKey = 'MAX_MATCHES'
+
 function preSession(setAppState, afterLosses, setAfterLosses, maxMatches, setMaxMatches) {
     return (
         <div>
@@ -25,6 +28,8 @@ function preSession(setAppState, afterLosses, setAfterLosses, maxMatches, setMax
             </div>
             <button onClick={e => {
                 e.preventDefault()
+                localStorage.setItem(AfterLossesKey, afterLosses)
+                localStorage.setItem(MaxMatchesKey, maxMatches)
                 setAppState('inSession')
             }}>Start session</button>
         </div>
@@ -83,8 +88,12 @@ function afterSession() {
 
 function App() {
     const [appState, setAppState] = useState('preSession')
-    const [afterLosses, setAfterLosses] = useState(1)
-    const [maxMatches, setMaxMatches] = useState(3)
+    const [afterLosses, setAfterLosses] = useState(
+        window.localStorage.getItem(AfterLossesKey) || 2
+    )
+    const [maxMatches, setMaxMatches] = useState(
+        window.localStorage.getItem(MaxMatchesKey) || 5
+    )
     const [records, setRecords] = useState([])
 
     let content
