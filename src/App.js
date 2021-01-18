@@ -110,7 +110,7 @@ function App() {
     }
 
     return (
-        <div className="flex-col flex h-screen">
+        <div className="flex-col flex h-screen md:w-1/2 m-auto md:border-l-2 md:border-r-2">
             <header className="bg-blue-600 bg-opacity-90 h-24 flex justify-center items-center">
                 <span className="text-3xl text-gray-100">Stop Overwatch loss spiral</span>
             </header>
