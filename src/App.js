@@ -110,17 +110,17 @@ function App() {
     }
 
     return (
-        <div className="flex-col">
-            <div className="bg-blue-600 bg-opacity-90 h-24 flex justify-center items-center">
+        <div className="flex-col flex h-screen">
+            <header className="bg-blue-600 bg-opacity-90 h-24 flex justify-center items-center">
                 <span className="text-3xl text-gray-100">Stop Overwatch loss spiral</span>
-            </div>
-            <div className="p-2 flex-auto">
+            </header>
+            <main className="p-2 flex-auto">
                 {content}
-            </div>
-            <div className="bg-blue-600 bg-opacity-90 text-xs text-gray-200 text-center p-2 space-y-0.5">
+            </main>
+            <footer className="bg-blue-600 bg-opacity-90 text-xs text-gray-200 text-center p-2 space-y-0.5">
                 <p>Overwatch is a trademark of Blizzard Entertainment, Inc.</p>
                 <p>This website is not affiliated with or endorsed by Blizzard Entertainment, Inc.</p>
-            </div>
+            </footer>
         </div>
     );
 }
