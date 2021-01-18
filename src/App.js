@@ -5,24 +5,24 @@ const MaxMatchesKey = 'MAX_MATCHES'
 
 function preSession(setAppState, afterLosses, setAfterLosses, maxMatches, setMaxMatches) {
     return (
-        <div className="flex flex-col space-y-1">
-            <div className="flex">
-                <span>Stop playing Overwatch after </span>
-                <input className="bg-yellow-500" type="number" min="1" value={afterLosses} onChange={e => {
+        <div className="flex flex-col space-y-2">
+            <div className="flex space-x-2">
+                <span>Stop playing after </span>
+                <input className="w-16 border-b-2" type="number" min="1" value={afterLosses} onChange={e => {
                     e.preventDefault()
                     setAfterLosses(e.target.value)
                 }}/>
                 <span> losses</span>
             </div>
-            <div className="flex">
-                <span>I will play maximum of </span>
-                <input className="bg-yellow-500" type="number" min="1" value={maxMatches} onChange={e => {
+            <div className="flex space-x-2">
+                <span>Play maximum of </span>
+                <input className="w-16 border-b-2" type="number" min="1" value={maxMatches} onChange={e => {
                     e.preventDefault()
                     setMaxMatches(e.target.value)
                 }}/>
                 <span> matches</span>
             </div>
-            <button className="bg-yellow-500" onClick={e => {
+            <button className="bg-yellow-400 text-gray-700 text-2xl p-1.5" onClick={e => {
                 e.preventDefault()
                 localStorage.setItem(AfterLossesKey, afterLosses)
                 localStorage.setItem(MaxMatchesKey, maxMatches)
@@ -52,10 +52,10 @@ function shouldStopSession(afterLosses, maxMatches, records) {
 
 function inSession(setAppState, afterLosses, maxMatches, records, setRecords) {
     return (
-        <div className="flex flex-col space-y-1">
-            <div>You've finished {records.length} matches</div>
+        <div className="flex flex-col space-y-2">
+            <div className="text-lg">You've finished {records.length} matches</div>
             <div className="flex">
-                <button className="bg-blue-500" onClick={e => {
+                <button className="bg-blue-400 text-gray-700 text-2xl p-1.5 w-1/3" onClick={e => {
                     e.preventDefault()
                     const newRecords = [...records, false]
                     setRecords(newRecords)
@@ -63,7 +63,15 @@ function inSession(setAppState, afterLosses, maxMatches, records, setRecords) {
                         setAppState('afterSession')
                     }
                 }}>Loss</button>
-                <button className="bg-yellow-500" onClick={e => {
+                <button className="bg-gray-400 text-gray-700 text-2xl p-1.5 w-1/3" onClick={e => {
+                    e.preventDefault()
+                    const newRecords = [...records, true]
+                    setRecords(newRecords)
+                    if (shouldStopSession(afterLosses, maxMatches, newRecords)) {
+                        setAppState('afterSession')
+                    }
+                }}>Draw</button>
+                <button className="bg-yellow-400 text-gray-700 text-2xl p-1.5 w-1/3" onClick={e => {
                     e.preventDefault()
                     const newRecords = [...records, true]
                     setRecords(newRecords)
@@ -78,7 +86,7 @@ function inSession(setAppState, afterLosses, maxMatches, records, setRecords) {
 
 function afterSession() {
     return (
-        <p>You should stop playing Overwatch now</p>
+        <span className="text-lg">You should stop playing Overwatch</span>
     )
 }
 
@@ -102,16 +110,16 @@ function App() {
     }
 
     return (
-        <div>
-            <div className="bg-blue-400 h-24">
-                <span className="text-2xl text-gray-500">Stop Overwatch loss spiral</span>
+        <div className="flex-col">
+            <div className="bg-blue-600 bg-opacity-90 h-24 flex justify-center items-center">
+                <span className="text-3xl text-gray-100">Stop Overwatch loss spiral</span>
             </div>
-            <div className="h-72">
+            <div className="p-2 flex-auto">
                 {content}
             </div>
-            <div className="bg-blue-400 text-xs text-gray-500">
+            <div className="bg-blue-600 bg-opacity-90 text-xs text-gray-200 text-center p-2 space-y-0.5">
                 <p>Overwatch is a trademark of Blizzard Entertainment, Inc.</p>
-                <p>This website is not affiliation with or endorsed by Blizzard Entertainment, Inc.</p>
+                <p>This website is not affiliated with or endorsed by Blizzard Entertainment, Inc.</p>
             </div>
         </div>
     );
