@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 
 const AfterLossesKey = 'AFTER_LOSSES'
 const MaxMatchesKey = 'MAX_MATCHES'
+const CountDrawAsLossKey = 'COUNT_DRAW_AS_LOSS'
 
-function preSession(setAppState, afterLosses, setAfterLosses, maxMatches, setMaxMatches) {
+function preSession(setAppState, afterLosses, setAfterLosses, maxMatches, setMaxMatches, countDrawAsLoss,
+                    setCountDrawAsLoss) {
     return (
         <div className="flex flex-col space-y-2">
             <div className="flex space-x-2">
@@ -22,23 +24,30 @@ function preSession(setAppState, afterLosses, setAfterLosses, maxMatches, setMax
                 }}/>
                 <span> matches</span>
             </div>
+            <div className="flex space-x-2">
+                <span>Count draw as loss </span>
+                <input className="w-16 border-b-2" type="checkbox" checked={countDrawAsLoss === 't'} onChange={e => {
+                    setCountDrawAsLoss(e.target.checked ? 't' : 'f')
+                }}/>
+            </div>
             <button className="bg-yellow-400 text-gray-700 text-2xl p-1.5" onClick={e => {
                 e.preventDefault()
                 localStorage.setItem(AfterLossesKey, afterLosses)
                 localStorage.setItem(MaxMatchesKey, maxMatches)
+                localStorage.setItem(CountDrawAsLossKey, countDrawAsLoss)
                 setAppState('inSession')
             }}>Start session</button>
         </div>
     )
 }
 
-function shouldStopSession(afterLosses, maxMatches, records) {
+function shouldStopSession(afterLosses, maxMatches, countDrawAsLoss, records) {
     if (records.length >= maxMatches) {
         return true
     }
     let lossAcc = 0
     for (let i = records.length - 1; i >= 0; --i) {
-        if (!records[i]) {
+        if (records[i] === 'l' || (records[i] === 'd' && countDrawAsLoss === 't')) {
             lossAcc += 1
             if (lossAcc >= afterLosses) {
                 return true
@@ -50,32 +59,32 @@ function shouldStopSession(afterLosses, maxMatches, records) {
     return false
 }
 
-function inSession(setAppState, afterLosses, maxMatches, records, setRecords) {
+function inSession(setAppState, afterLosses, maxMatches, countDrawAsLoss, records, setRecords) {
     return (
         <div className="flex flex-col space-y-2">
             <div className="text-lg">You've finished {records.length} matches</div>
             <div className="flex">
                 <button className="bg-blue-400 text-gray-700 text-2xl p-1.5 w-1/3" onClick={e => {
                     e.preventDefault()
-                    const newRecords = [...records, false]
+                    const newRecords = [...records, 'l']
                     setRecords(newRecords)
-                    if (shouldStopSession(afterLosses, maxMatches, newRecords)) {
+                    if (shouldStopSession(afterLosses, maxMatches, countDrawAsLoss, newRecords)) {
                         setAppState('afterSession')
                     }
                 }}>Loss</button>
                 <button className="bg-gray-400 text-gray-700 text-2xl p-1.5 w-1/3" onClick={e => {
                     e.preventDefault()
-                    const newRecords = [...records, true]
+                    const newRecords = [...records, 'd']
                     setRecords(newRecords)
-                    if (shouldStopSession(afterLosses, maxMatches, newRecords)) {
+                    if (shouldStopSession(afterLosses, maxMatches, countDrawAsLoss, newRecords)) {
                         setAppState('afterSession')
                     }
                 }}>Draw</button>
                 <button className="bg-yellow-400 text-gray-700 text-2xl p-1.5 w-1/3" onClick={e => {
                     e.preventDefault()
-                    const newRecords = [...records, true]
+                    const newRecords = [...records, 'w']
                     setRecords(newRecords)
-                    if (shouldStopSession(afterLosses, maxMatches, newRecords)) {
+                    if (shouldStopSession(afterLosses, maxMatches, countDrawAsLoss, newRecords)) {
                         setAppState('afterSession')
                     }
                 }}>Win</button>
@@ -105,13 +114,17 @@ function App() {
     const [maxMatches, setMaxMatches] = useState(
         window.localStorage.getItem(MaxMatchesKey) || 5
     )
+    const [ countDrawAsLoss, setCountDrawAsLoss ] = useState(
+        window.localStorage.getItem(CountDrawAsLossKey) || 'f'
+    )
     const [records, setRecords] = useState([])
 
     let content
     if (appState === 'preSession') {
-        content = preSession(setAppState, afterLosses, setAfterLosses, maxMatches, setMaxMatches)
+        content = preSession(setAppState, afterLosses, setAfterLosses, maxMatches, setMaxMatches, countDrawAsLoss,
+            setCountDrawAsLoss)
     } else if (appState === 'inSession') {
-        content = inSession(setAppState, afterLosses, maxMatches, records, setRecords)
+        content = inSession(setAppState, afterLosses, maxMatches, countDrawAsLoss, records, setRecords)
     } else {
         content = afterSession(setAppState, setRecords)
     }
