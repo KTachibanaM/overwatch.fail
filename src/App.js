@@ -84,9 +84,16 @@ function inSession(setAppState, afterLosses, maxMatches, records, setRecords) {
     )
 }
 
-function afterSession() {
+function afterSession(setAppState, setRecords) {
     return (
-        <span className="text-lg">You should stop playing Overwatch</span>
+        <div className="flex flex-col space-y-2">
+            <p className="text-lg">You should stop playing Overwatch</p>
+            <button className="bg-yellow-400 text-gray-700 text-2xl p-1.5" onClick={e => {
+                e.preventDefault()
+                setAppState('preSession')
+                setRecords([])
+            }}>Restart</button>
+        </div>
     )
 }
 
@@ -106,7 +113,7 @@ function App() {
     } else if (appState === 'inSession') {
         content = inSession(setAppState, afterLosses, maxMatches, records, setRecords)
     } else {
-        content = afterSession()
+        content = afterSession(setAppState, setRecords)
     }
 
     return (
